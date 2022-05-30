@@ -34,4 +34,5 @@ class Messenger:
         message = packet.message
         if isinstance(message, LocationQueryResponse):
             self._address_translator.register(message.address, message.location)
-        self._handle(packet)
+        else:
+            self._handle(packet)

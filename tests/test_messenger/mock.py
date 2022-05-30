@@ -32,9 +32,11 @@ class MockChannel(Channel):
 class MockMessageHandler:
     def __init__(self):
         self.called_with_packet = None
+        self.is_called = False
 
     def handle(self, packet: Packet):
         self.called_with_packet = packet
+        self.is_called = True
 
 
 class MyMessage(Message):
