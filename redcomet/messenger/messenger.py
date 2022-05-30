@@ -31,11 +31,17 @@ class Messenger:
         self._query_location_and_store_pending_packet(packet, receiver)
 
     def receive(self, packet: Packet):
+        self._register_sender_location(packet)
         message = packet.message
+
         if isinstance(message, LocationQueryResponse):
             self._receive_location_query_response(message)
         else:
             self._handle(packet)
+
+    def _register_sender_location(self, packet):
+        if packet.sender_location is not None:
+            self._address_translator.register(packet.sender, packet.sender_location)
 
     def _query_location_and_store_pending_packet(self, packet: Packet, receiver: Address):
         query_message = LocationQueryRequest(receiver, metadata={"pending_packet": packet})
