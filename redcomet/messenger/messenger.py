@@ -31,12 +31,12 @@ class Messenger:
         self._query_location_and_store_pending_packet(packet, receiver)
 
     def receive(self, packet: Packet):
-        self._register_sender_location(packet)
         message = packet.message
 
         if isinstance(message, LocationQueryResponse):
             self._receive_location_query_response(message)
         else:
+            self._register_sender_location(packet)
             self._handle(packet)
 
     def _register_sender_location(self, packet):
@@ -54,8 +54,9 @@ class Messenger:
             self._channels[location].send(packet)
 
     def _receive_location_query_response(self, response: LocationQueryResponse):
-        self._address_translator.register(response.address, response.location)
-        pending_packet = response.metadata.get("pending_packet", None)
+        if response.location is not None:
+            self._address_translator.register(response.address, response.location)
 
+        pending_packet = response.metadata.get("pending_packet", None)
         if pending_packet is not None:
             self._send_to_channel(response.location, pending_packet)

@@ -1,10 +1,10 @@
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 from redcomet.messenger import Message, Address, Location
 
 
 class LocationQueryResponse(Message):
-    def __init__(self, address: Address, location: Location, metadata: Dict[Any, Any]):
+    def __init__(self, address: Address, location: Optional[Location], metadata: Dict[Any, Any]):
         self._address = address
         self._location = location
         self._metadata = metadata

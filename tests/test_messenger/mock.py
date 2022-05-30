@@ -9,6 +9,7 @@ class MockAddressTranslator(AddressTranslator):
         self._query_return = query_return
         self.query_called_with_address = None
         self.register_called_with_parameters = None
+        self.register_is_called = False
 
     def query(self, address: Address) -> Optional[Location]:
         self.query_called_with_address = address
@@ -16,6 +17,7 @@ class MockAddressTranslator(AddressTranslator):
 
     def register(self, address: Address, location: Location):
         self.register_called_with_parameters = address, location
+        self.register_is_called = True
 
 
 class MockChannel(Channel):

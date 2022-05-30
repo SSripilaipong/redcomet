@@ -62,3 +62,17 @@ def test_should_send_pending_packet_if_attached_in_metadata():
     messenger.receive(Packet(response, Address("$.discovery"), Address("$.me")))
 
     assert channel.send_called_with_packet == pending_packet
+
+
+def test_should_not_register_address_location_when_receiving_query_response_with_empty_location():
+    translator = MockAddressTranslator()
+    messenger = Messenger(Address(""), Location(""),
+                          handle=lambda _: ...,
+                          address_translator=translator,
+                          discovery_location=Location(""),
+                          channels={})
+
+    response = LocationQueryResponse(Address("$.you"), None, metadata={})
+    messenger.receive(Packet(response, Address("$.discovery"), Address("$.me")))
+
+    assert not translator.register_is_called
