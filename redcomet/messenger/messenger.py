@@ -10,9 +10,11 @@ from ..usecase.sending_to_unknown import LocationQueryRequest, LocationQueryResp
 
 
 class Messenger:
-    def __init__(self, address: Address, handle: Callable[[Packet], Any], address_translator: AddressTranslator,
-                 discovery_location: Location, channels: Dict[Location, Channel]):
+    def __init__(self, address: Address, location: Location, handle: Callable[[Packet], Any],
+                 address_translator: AddressTranslator, discovery_location: Location,
+                 channels: Dict[Location, Channel]):
         self._address = address
+        self._location = location
         self._handle = handle
         self._address_translator = address_translator
         self._discovery_location = discovery_location
@@ -40,6 +42,8 @@ class Messenger:
         self._send_to_channel(self._discovery_location, Packet(query_message, self._address, Address("$.discovery")))
 
     def _send_to_channel(self, location: Location, packet: Packet):
+        packet.sender_location = self._location
+
         with suppress(BaseException):
             self._channels[location].send(packet)
 

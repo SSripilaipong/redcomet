@@ -5,7 +5,7 @@ from tests.test_messenger.mock import MockChannel, MockAddressTranslator, MyMess
 
 def test_should_send_query_message_to_discovery_service_when_address_is_unknown():
     channel = MockChannel()
-    messenger = Messenger(Address("$.msg"),
+    messenger = Messenger(Address("$.msg"), Location(""),
                           handle=lambda _: ...,
                           address_translator=MockAddressTranslator(query_return=None),
                           discovery_location=Location("discovery_node"),
@@ -21,7 +21,7 @@ def test_should_send_query_message_to_discovery_service_when_address_is_unknown(
 
 def test_should_register_location_when_receiving_query_message_response():
     translator = MockAddressTranslator()
-    messenger = Messenger(Address(""),
+    messenger = Messenger(Address(""), Location(""),
                           handle=lambda _: ...,
                           address_translator=translator,
                           discovery_location=Location(""),
@@ -35,7 +35,7 @@ def test_should_register_location_when_receiving_query_message_response():
 
 def test_should_not_call_message_handler_when_receiving_query_message_response():
     handler = MockMessageHandler()
-    messenger = Messenger(Address(""),
+    messenger = Messenger(Address(""), Location(""),
                           handle=handler.handle,
                           address_translator=MockAddressTranslator(),
                           discovery_location=Location(""),
@@ -50,7 +50,7 @@ def test_should_not_call_message_handler_when_receiving_query_message_response()
 
 def test_should_send_pending_packet_if_attached_in_metadata():
     channel = MockChannel()
-    messenger = Messenger(Address(""),
+    messenger = Messenger(Address(""), Location(""),
                           handle=lambda _: ...,
                           address_translator=MockAddressTranslator(),
                           discovery_location=Location(""),

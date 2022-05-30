@@ -21,7 +21,7 @@ class MockAddressTranslator(AddressTranslator):
 class MockChannel(Channel):
     def __init__(self, send_error=None):
         self._send_error = send_error
-        self.send_called_with_packet = None
+        self.send_called_with_packet: Optional[Packet] = None
 
     def send(self, packet: Packet):
         self.send_called_with_packet = packet
