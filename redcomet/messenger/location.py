@@ -10,3 +10,6 @@ class Location:
 
     def __hash__(self) -> int:
         return hash(self._id)
+
+    def __repr__(self) -> str:
+        return f"Location({self._id!r})"

@@ -9,3 +9,6 @@ class Address:
 
     def __hash__(self) -> int:
         return hash(self._text)
+
+    def __repr__(self) -> str:
+        return f"Address({self._text!r})"

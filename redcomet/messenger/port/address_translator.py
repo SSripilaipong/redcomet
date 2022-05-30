@@ -9,3 +9,7 @@ class AddressTranslator(ABC):
     @abstractmethod
     def query(self, address: Address) -> Location:
         pass
+
+    @abstractmethod
+    def register(self, address: Address, location: Location):
+        pass

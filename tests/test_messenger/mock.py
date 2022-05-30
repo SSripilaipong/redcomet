@@ -8,10 +8,14 @@ class MockAddressTranslator(AddressTranslator):
     def __init__(self, query_return=None):
         self._query_return = query_return
         self.query_called_with_address = None
+        self.register_called_with_parameters = None
 
     def query(self, address: Address) -> Optional[Location]:
         self.query_called_with_address = address
         return self._query_return
+
+    def register(self, address: Address, location: Location):
+        self.register_called_with_parameters = address, location
 
 
 class MockChannel(Channel):
