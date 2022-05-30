@@ -13,7 +13,7 @@ def test_should_send_query_message_to_discovery_service_when_address_is_unknown(
                           channels={Location("discovery_node"): channel})
     message = MyMessage()
 
-    messenger.send(Address("$.you"), message)
+    messenger.send(message, None, Address("$.you"))
 
     expected = LocationQueryRequest(Address("$.you"),
                                     metadata={"pending_packet": Packet(message, Address("$.me"), Address("$.you"))})
