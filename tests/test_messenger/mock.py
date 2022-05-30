@@ -1,6 +1,6 @@
 from typing import Optional
 
-from redcomet.messenger import Address, Location, Message
+from redcomet.messenger import Address, Location, Message, Packet
 from redcomet.messenger.port import AddressTranslator, Channel
 
 
@@ -17,13 +17,9 @@ class MockAddressTranslator(AddressTranslator):
 class MockChannel(Channel):
     def __init__(self, send_error=None):
         self._send_error = send_error
-        self.send_called_with_message = None
-        self.send_called_with_address = None
-        self.send_called_with_parameters = None
+        self.send_called_with_packet = None
 
-    def send(self, address: Address, message: Message):
-        self.send_called_with_address = address
-        self.send_called_with_message = message
-        self.send_called_with_parameters = (address, message)
+    def send(self, packet: Packet):
+        self.send_called_with_packet = packet
         if self._send_error is not None:
             raise self._send_error
