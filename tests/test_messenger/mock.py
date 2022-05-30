@@ -23,3 +23,15 @@ class MockChannel(Channel):
         self.send_called_with_packet = packet
         if self._send_error is not None:
             raise self._send_error
+
+
+class MockMessageHandler:
+    def __init__(self):
+        self.called_with_packet = None
+
+    def handle(self, packet: Packet):
+        self.called_with_packet = packet
+
+
+class MyMessage(Message):
+    pass

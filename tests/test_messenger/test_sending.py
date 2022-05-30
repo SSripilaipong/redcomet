@@ -1,15 +1,12 @@
-from redcomet.messenger import Message, Messenger, Address, Location, Packet
+from redcomet.messenger import Messenger, Address, Location, Packet
 from redcomet.usecase.discovery import LocationQueryMessage
-from tests.test_messenger.mock import MockAddressTranslator, MockChannel
-
-
-class MyMessage(Message):
-    pass
+from tests.test_messenger.mock import MockAddressTranslator, MockChannel, MyMessage
 
 
 def test_should_query_location_from_address_translator():
     translator = MockAddressTranslator(Location(""))
     messenger = Messenger(Address(""),
+                          handle=lambda _: ...,
                           address_translator=translator,
                           discovery_location=Location("discovery_node"),
                           channels={Location(""): MockChannel()})
@@ -22,6 +19,7 @@ def test_should_query_location_from_address_translator():
 def test_should_send_message_to_corresponding_channel_when_the_location_is_known():
     channel = MockChannel()
     messenger = Messenger(Address("$.me"),
+                          handle=lambda _: ...,
                           address_translator=MockAddressTranslator(query_return=Location("my_node")),
                           discovery_location=Location("discovery_node"),
                           channels={Location("my_node"): channel})
@@ -34,6 +32,7 @@ def test_should_send_message_to_corresponding_channel_when_the_location_is_known
 
 def test_should_suppress_any_exception_from_channel_send():
     messenger = Messenger(Address(""),
+                          handle=lambda _: ...,
                           address_translator=MockAddressTranslator(query_return=Location("my_node")),
                           discovery_location=Location("discovery_node"),
                           channels={Location("my_node"): MockChannel(send_error=BaseException())})
@@ -44,6 +43,7 @@ def test_should_suppress_any_exception_from_channel_send():
 def test_should_send_query_message_to_discovery_service_when_address_is_unknown():
     channel = MockChannel()
     messenger = Messenger(Address("$.me"),
+                          handle=lambda _: ...,
                           address_translator=MockAddressTranslator(query_return=None),
                           discovery_location=Location("discovery_node"),
                           channels={Location("discovery_node"): channel})
