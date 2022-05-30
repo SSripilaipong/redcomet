@@ -1,6 +1,5 @@
 from redcomet.messenger import Messenger, Address, Location, Packet
-from redcomet.usecase.sending_to_unknown import LocationQueryRequest
-from redcomet.usecase.sending_to_unknown.response import LocationQueryResponse
+from redcomet.usecase.sending_to_unknown import LocationQueryRequest, LocationQueryResponse
 from tests.test_messenger.mock import MockChannel, MockAddressTranslator, MyMessage, MockMessageHandler
 
 
@@ -25,7 +24,7 @@ def test_should_register_location_when_receiving_query_message_response():
     messenger = Messenger(Address(""),
                           handle=lambda _: ...,
                           address_translator=translator,
-                          discovery_location=Location("discovery_node"),
+                          discovery_location=Location(""),
                           channels={Location("your_node"): MockChannel()})
 
     response = LocationQueryResponse(Address("$.you"), Location("your_node"), metadata={})
@@ -54,7 +53,7 @@ def test_should_send_pending_packet_if_attached_in_metadata():
     messenger = Messenger(Address(""),
                           handle=lambda _: ...,
                           address_translator=MockAddressTranslator(),
-                          discovery_location=Location("discovery_node"),
+                          discovery_location=Location(""),
                           channels={Location("your_node"): channel})
 
     pending_packet = Packet(MyMessage(), sender=Address("$.me"), receiver=Address("$.you"))
