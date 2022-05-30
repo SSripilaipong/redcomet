@@ -6,23 +6,23 @@ from tests.test_messenger.mock import MockChannel, MockAddressTranslator, MyMess
 
 def test_should_send_query_message_to_discovery_service_when_address_is_unknown():
     channel = MockChannel()
-    messenger = Messenger(Address("$.me"),
+    messenger = Messenger(Address("$.msg"),
                           handle=lambda _: ...,
                           address_translator=MockAddressTranslator(query_return=None),
                           discovery_location=Location("discovery_node"),
                           channels={Location("discovery_node"): channel})
     message = MyMessage()
 
-    messenger.send(message, None, Address("$.you"))
+    messenger.send(message, Address("$.me"), Address("$.you"))
 
     expected = LocationQueryRequest(Address("$.you"),
                                     metadata={"pending_packet": Packet(message, Address("$.me"), Address("$.you"))})
-    assert channel.send_called_with_packet == Packet(expected, Address("$.me"), Address("$.discovery"))
+    assert channel.send_called_with_packet == Packet(expected, Address("$.msg"), Address("$.discovery"))
 
 
 def test_should_register_location_when_receiving_query_message_response():
     translator = MockAddressTranslator()
-    messenger = Messenger(Address("$.me"),
+    messenger = Messenger(Address(""),
                           handle=lambda _: ...,
                           address_translator=translator,
                           discovery_location=Location("discovery_node"),

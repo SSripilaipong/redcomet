@@ -19,13 +19,14 @@ class Messenger:
         self._channels = channels
 
     def send(self, message: Message, sender: Address, receiver: Address):
+        packet = Packet(message, sender, receiver)
         location = self._address_translator.query(receiver)
+
         if location is not None:
             with suppress(BaseException):
-                self._channels[location].send(Packet(message, self._address, receiver))
+                self._channels[location].send(packet)
             return
 
-        packet = Packet(message, self._address, receiver)
         query_message = LocationQueryRequest(receiver, metadata={"pending_packet": packet})
         self._channels[self._discovery_location].send(Packet(query_message, self._address, Address("$.discovery")))
 
