@@ -23,19 +23,29 @@ class Messenger:
         location = self._address_translator.query(receiver)
 
         if location is not None:
-            with suppress(BaseException):
-                self._channels[location].send(packet)
+            self._send_to_channel(location, packet)
             return
 
-        query_message = LocationQueryRequest(receiver, metadata={"pending_packet": packet})
-        self._channels[self._discovery_location].send(Packet(query_message, self._address, Address("$.discovery")))
+        self._query_location_and_store_pending_packet(packet, receiver)
 
     def receive(self, packet: Packet):
         message = packet.message
         if isinstance(message, LocationQueryResponse):
-            self._address_translator.register(message.address, message.location)
-            pending_packet = message.metadata.get("pending_packet", None)
-            if pending_packet is not None:
-                self._channels[message.location].send(pending_packet)
+            self._receive_location_query_response(message)
         else:
             self._handle(packet)
+
+    def _query_location_and_store_pending_packet(self, packet: Packet, receiver: Address):
+        query_message = LocationQueryRequest(receiver, metadata={"pending_packet": packet})
+        self._send_to_channel(self._discovery_location, Packet(query_message, self._address, Address("$.discovery")))
+
+    def _send_to_channel(self, location: Location, packet: Packet):
+        with suppress(BaseException):
+            self._channels[location].send(packet)
+
+    def _receive_location_query_response(self, response: LocationQueryResponse):
+        self._address_translator.register(response.address, response.location)
+        pending_packet = response.metadata.get("pending_packet", None)
+
+        if pending_packet is not None:
+            self._send_to_channel(response.location, pending_packet)
