@@ -17,10 +17,17 @@ def test_should_query_location_from_address_translator():
 
 def test_should_send_message_to_corresponding_channel_when_the_location_is_known():
     channel = MockChannel()
-    translator = MockAddressTranslator(query_return={(Address("$.hello"),): Location("my_node")})
-    messenger = Messenger(address_translator=translator, channels={Location("my_node"): channel})
+    messenger = Messenger(address_translator=MockAddressTranslator(query_return=Location("my_node")),
+                          channels={Location("my_node"): channel})
     message = MyMessage()
 
     messenger.send(Address("$.hello"), message)
 
     assert channel.send_called_with_message == message
+
+
+def test_should_suppress_any_exception_from_channel_send():
+    messenger = Messenger(address_translator=MockAddressTranslator(query_return=Location("my_node")),
+                          channels={Location("my_node"): MockChannel(send_error=BaseException())})
+
+    messenger.send(Address("$.hello"), MyMessage())

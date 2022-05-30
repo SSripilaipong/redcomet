@@ -1,3 +1,4 @@
+from contextlib import suppress
 from typing import Dict
 
 from .location import Location
@@ -14,4 +15,5 @@ class Messenger:
     def send(self, address: Address, message: Message):
         location = self._address_translator.query(address)
         if location is not None:
-            self._channels[location].send(message)
+            with suppress(BaseException):
+                self._channels[location].send(message)
