@@ -26,7 +26,7 @@ def test_should_register_location_when_receiving_query_message_response():
                           handle=lambda _: ...,
                           address_translator=translator,
                           discovery_location=Location("discovery_node"),
-                          channels={Location("discovery_node"): MockChannel(), Location("your_node"): MockChannel()})
+                          channels={Location("your_node"): MockChannel()})
 
     response = LocationQueryResponse(Address("$.you"), Location("your_node"), metadata={})
     messenger.receive(Packet(response, Address("$.discovery"), Address("$.me")))
