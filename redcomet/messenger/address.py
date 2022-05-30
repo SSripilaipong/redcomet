@@ -6,3 +6,6 @@ class Address:
         if not isinstance(other, Address):
             return False
         return self._text == other._text
+
+    def __hash__(self) -> int:
+        return hash(self._text)
