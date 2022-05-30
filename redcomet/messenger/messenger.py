@@ -34,5 +34,8 @@ class Messenger:
         message = packet.message
         if isinstance(message, LocationQueryResponse):
             self._address_translator.register(message.address, message.location)
+            pending_packet = message.metadata.get("pending_packet", None)
+            if pending_packet is not None:
+                self._channels[message.location].send(pending_packet)
         else:
             self._handle(packet)

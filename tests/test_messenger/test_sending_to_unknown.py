@@ -47,3 +47,19 @@ def test_should_not_call_message_handler_when_receiving_query_message_response()
     messenger.receive(packet)
 
     assert not handler.is_called
+
+
+def test_should_send_pending_packet_if_attached_in_metadata():
+    channel = MockChannel()
+    messenger = Messenger(Address(""),
+                          handle=lambda _: ...,
+                          address_translator=MockAddressTranslator(),
+                          discovery_location=Location("discovery_node"),
+                          channels={Location("your_node"): channel})
+
+    pending_packet = Packet(MyMessage(), sender=Address("$.me"), receiver=Address("$.you"))
+    response = LocationQueryResponse(Address("$.you"), Location("your_node"),
+                                     metadata={"pending_packet": pending_packet})
+    messenger.receive(Packet(response, Address("$.discovery"), Address("$.me")))
+
+    assert channel.send_called_with_packet == pending_packet

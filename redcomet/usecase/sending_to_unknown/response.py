@@ -17,6 +17,10 @@ class LocationQueryResponse(Message):
     def location(self) -> Location:
         return self._location
 
+    @property
+    def metadata(self) -> Dict[Any, Any]:
+        return self._metadata
+
     def __eq__(self, other):
         if not isinstance(other, LocationQueryResponse):
             return False
