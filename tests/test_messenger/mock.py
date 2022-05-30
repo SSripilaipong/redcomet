@@ -18,8 +18,10 @@ class MockChannel(Channel):
     def __init__(self, send_error=None):
         self._send_error = send_error
         self.send_called_with_message = None
+        self.send_called_with_address = None
 
-    def send(self, message: Message):
+    def send(self, address: Address, message: Message):
+        self.send_called_with_address = address
         self.send_called_with_message = message
         if self._send_error is not None:
             raise self._send_error

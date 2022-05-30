@@ -16,4 +16,4 @@ class Messenger:
         location = self._address_translator.query(address)
         if location is not None:
             with suppress(BaseException):
-                self._channels[location].send(message)
+                self._channels[location].send(address, message)
